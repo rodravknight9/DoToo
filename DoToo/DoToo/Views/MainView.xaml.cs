@@ -1,4 +1,4 @@
-﻿using DoToo.ViewModel;
+﻿using DoToo.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,6 +12,9 @@ namespace DoToo.Views
             InitializeComponent();
             viewModel.Navigation = Navigation;
             BindingContext = viewModel;
+
+            ItemsListView.ItemSelected += (s, e) => ItemsListView.SelectedItem = null;
+
         }
     }
 }

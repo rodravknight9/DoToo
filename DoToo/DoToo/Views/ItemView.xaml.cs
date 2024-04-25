@@ -1,4 +1,4 @@
-﻿using DoToo.ViewModel;
+﻿using DoToo.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

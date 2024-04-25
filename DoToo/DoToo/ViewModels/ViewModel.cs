@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using Xamarin.Forms;
 
-namespace DoToo.ViewModel
+namespace DoToo.ViewModels
 {
     public abstract class ViewModel : INotifyPropertyChanged
     {
