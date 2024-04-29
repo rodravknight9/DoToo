@@ -18,6 +18,10 @@
             </Style>
             <Color x:Key="CompletedColor">#1C8859</Color>
             <Color x:Key="ActiveColor">#D3D3D3</Color>
+            <x:String x:Key="ReactivateLabel">Reactivate</x:String>
+            <x:String x:Key="CompletedLabel">Completed</x:String>
+            <x:String x:Key="AllLabel">All</x:String>
+            <x:String x:Key="ActiveLabel">Active</x:String>
         </ResourceDictionary>
     </Application.Resources>
     

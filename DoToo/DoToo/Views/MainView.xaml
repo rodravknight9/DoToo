@@ -9,6 +9,8 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:StatusColorConverter x:Key="statusColorConverter" />
+            <converters:ToggleStatusTextConverter x:Key="toggleStatusTextConverter" />
+            <converters:FilterTextConverter x:Key="filterTextConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     
@@ -24,7 +26,7 @@
 
         <Button 
             Style="{StaticResource FilterButton}"
-            Text="{Binding FilterText, StringFormat='Filter: {0}'}" 
+            Text="{Binding ShowAll, Converter={StaticResource filterTextConverter}}" 
             Command="{Binding ToggleFilter}" 
             BackgroundColor="{Binding ShowAll, Converter={StaticResource statusColorConverter}}"
             TextColor="Black"
@@ -48,7 +50,7 @@
                     <ViewCell>
                         <ViewCell.ContextActions>
                             <MenuItem 
-                                Text="{Binding StatusText}"
+                                Text="{Binding Item.Completed, Converter={StaticResource toggleStatusTextConverter}}"
                                 Command="{Binding ToggleCompleted}"
                             />
                         </ViewCell.ContextActions>

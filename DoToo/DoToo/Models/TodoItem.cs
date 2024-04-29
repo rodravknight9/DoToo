@@ -3,7 +3,6 @@ using System;
 
 namespace DoToo.Models
 {
-   
     public class TodoItem
     {
         [PrimaryKey, AutoIncrement]

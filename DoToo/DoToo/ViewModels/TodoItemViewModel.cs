@@ -7,12 +7,15 @@ namespace DoToo.ViewModels
 {
     public class TodoItemViewModel : ViewModel
     {
-        public TodoItemViewModel(TodoItem item) => Item = item;
+        public TodoItem Item { get; private set; }
 
         public event EventHandler ItemStatusChanged;
-        public TodoItem Item { get; private set; }
-        //Note: might be a good idea to have a custom Converter 
-        public string StatusText => Item.Completed ? "Reactivate" : "Completed";
+
+        public TodoItemViewModel(TodoItem item)
+        { 
+            Item = item;
+        }
+
         public ICommand ToggleCompleted => new Command((arg) =>
         {
             Item.Completed = !Item.Completed;

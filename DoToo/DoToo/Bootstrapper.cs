@@ -4,6 +4,7 @@ using System.Reflection;
 using Xamarin.Forms;
 using DoToo.Repositories;
 using DoToo.ViewModels;
+using DoToo.Utils;
 
 namespace DoToo
 {
@@ -29,6 +30,7 @@ namespace DoToo
             }
 
             ContainerBuilder.RegisterType<TodoItemRepository>().SingleInstance();
+            ContainerBuilder.RegisterInstance(new MessageService()).As<IMessageServices>();
         }
 
         private void FinishInitialization()

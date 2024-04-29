@@ -2,10 +2,8 @@
 using DoToo.Repositories;
 using DoToo.Views;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -20,16 +18,41 @@ namespace DoToo.ViewModels
         //Note: ObservableCollection can notify listeners about changes in the list
         public ObservableCollection<TodoItemViewModel> Items { get; set; }
         public bool ShowAll { get; set; }
-        public string FilterText => ShowAll ? "All" : "Active";
 
+        //Note: command must be a property, all command should have the ICommand type
+        public ICommand AddItem => new Command(async () =>
+        {
+            var itemView = Resolver.Resolve<ItemView>();
+            await Navigation.PushAsync(itemView);
+        });
+
+        public ICommand ToggleFilter => new Command(async () =>
+        {
+            ShowAll = !ShowAll;
+            await LoadData();
+        });
+
+        /// <summary>
+        /// Used in the Selected Item View list property
+        /// </summary>
         public TodoItemViewModel SelectedItem
         {
             get { return null; }
-            set 
+            set
             {
                 Device.BeginInvokeOnMainThread(async () => await NavigateToItem(value));
                 RaisePropertyChanged(nameof(SelectedItem));
             }
+        }
+
+        public MainViewModel(TodoItemRepository repository)
+        {
+            // define the event listeners when adding/updating an item
+            repository.OnItemAdded += (sender, item) => Items.Add(CreateTodoItemViewModel(item));
+            repository.OnItemUpdated += (sender, item) => Task.Run(async () => await LoadData());
+
+            _repository = repository;
+            Task.Run(async () => await LoadData());
         }
 
         private async Task NavigateToItem(TodoItemViewModel item)
@@ -43,24 +66,11 @@ namespace DoToo.ViewModels
             await Navigation.PushAsync(itemView);
         }
 
-
-        public MainViewModel(TodoItemRepository repository)
-        {
-            repository.OnItemAdded += (sender, item) =>  Items.Add(CreateTodoItemViewModel(item));
-            repository.OnItemUpdated += (sender, item) => Task.Run(async () => await LoadData());
-
-            _repository = repository;
-            Task.Run(async () => await LoadData());
-        }
-
         private async Task LoadData()
         {
-            var items = await _repository.GetItems();
-            if (!ShowAll)
-            {
-                items = items.Where(x => x.Completed == false).ToList();
-            }
+            var items = await _repository.GetItems(ShowAll);
             var itemViewModels = items.Select(i => CreateTodoItemViewModel(i));
+
             Items = new ObservableCollection<TodoItemViewModel>(itemViewModels);
         }
 
@@ -86,17 +96,6 @@ namespace DoToo.ViewModels
             }
         }
 
-        //Note: command must be a property, all command should have the ICommand type
-        public ICommand AddItem => new Command(async () =>
-        {
-            var itemView = Resolver.Resolve<ItemView>();
-            await Navigation.PushAsync(itemView);
-        });
-
-        public ICommand ToggleFilter => new Command(async () =>
-        {
-            ShowAll = !ShowAll;
-            await LoadData();
-        });
+        
     }
 }
