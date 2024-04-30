@@ -15,6 +15,6 @@ namespace DoToo.Repositories
         Task AddItem(TodoItem item);
         Task UpdateItem(TodoItem item);
         Task AddOrUpdate(TodoItem item);
-        Task DeleteItem(int id);
+        Task<bool> DeleteItem(int id);
     }
 }

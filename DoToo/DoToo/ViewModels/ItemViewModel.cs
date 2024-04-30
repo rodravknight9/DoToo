@@ -31,10 +31,9 @@ namespace DoToo.ViewModels
 
         public ICommand Delete => new Command(async () =>
         {
-            bool isOk = await _messageServices.ShowAsync("Are you sure to delete this item?");
-            if (!isOk)
-                return;
-            await _repository.DeleteItem(Item.Id);
+            if(Item.Id <= 0) return;
+            bool isOk = await _messageServices.AskAsync("Are you sure you want to delete this item?");
+            if (!isOk) return;
             await Navigation.PopAsync();
         });
 

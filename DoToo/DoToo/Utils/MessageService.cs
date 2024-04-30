@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace DoToo.Utils
 {
     public class MessageService : IMessageServices
     {
-        public async Task<bool> ShowAsync(string message)
+        public async Task ShowAsync(string message)
         {
-            return await App.Current.MainPage.DisplayAlert("YourApp", message, "Ok", "Cancel");
+            await App.Current.MainPage.DisplayAlert("DoToo", message, "Ok");
+        }
+
+        public async Task<bool> AskAsync(string message)
+        {
+            return await App.Current.MainPage.DisplayAlert("DoToo", message, "Ok", "Cancel");
         }
     }
 }

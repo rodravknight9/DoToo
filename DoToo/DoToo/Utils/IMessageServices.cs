@@ -4,6 +4,7 @@ namespace DoToo.Utils
 {
     public interface IMessageServices
     {
-        Task<bool> ShowAsync(string message);
+        Task ShowAsync(string message);
+        Task<bool> AskAsync(string message);
     }
 }
