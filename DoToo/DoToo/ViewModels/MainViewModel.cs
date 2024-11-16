@@ -2,6 +2,7 @@
 using DoToo.Repositories;
 using DoToo.Views;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace DoToo.ViewModels
     {
 
         private readonly TodoItemRepository _repository;
+        private readonly ISubTaskRepository _subTaskRepository;
 
         //Note: ObservableCollection can notify listeners about changes in the list
         public ObservableCollection<TodoItemViewModel> Items { get; set; }
@@ -23,6 +25,8 @@ namespace DoToo.ViewModels
         public ICommand AddItem => new Command(async () =>
         {
             var itemView = Resolver.Resolve<ItemView>();
+            var vm = itemView.BindingContext as ItemViewModel;
+            vm.SubTasks = new ObservableCollection<SubtaskViewModel>(new List<SubtaskViewModel>());
             await Navigation.PushAsync(itemView);
         });
 
@@ -45,13 +49,14 @@ namespace DoToo.ViewModels
             }
         }
 
-        public MainViewModel(TodoItemRepository repository)
+        public MainViewModel(TodoItemRepository repository, SubTaskRepository subTaskRepository)
         {
             // define the event listeners when adding/updating an item
             repository.OnItemAdded += (sender, item) => Items.Add(CreateTodoItemViewModel(item));
             repository.OnItemUpdated += (sender, item) => Task.Run(async () => await LoadData());
 
             _repository = repository;
+            _subTaskRepository = subTaskRepository;
             Task.Run(async () => await LoadData());
         }
 
@@ -63,6 +68,16 @@ namespace DoToo.ViewModels
             var itemView = Resolver.Resolve<ItemView>();
             var vm = itemView.BindingContext as ItemViewModel;
             vm.Item = item.Item;
+            vm.Load();
+
+            if (vm.Item.Id > 0)
+            {
+                var subTasks = (await _subTaskRepository.GetItems(vm.Item.Id))
+                    .Select(t => vm.CreateSubTaskViewModel(t));
+                vm.SubTasks = new ObservableCollection<SubtaskViewModel>(subTasks);
+            }
+
+            vm.canBeDeleted = vm.Item.Id > 0;
             await Navigation.PushAsync(itemView);
         }
 

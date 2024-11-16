@@ -22,6 +22,10 @@
             <x:String x:Key="CompletedLabel">Completed</x:String>
             <x:String x:Key="AllLabel">All</x:String>
             <x:String x:Key="ActiveLabel">Active</x:String>
+
+            <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeRegular">
+                <On Platform="Android" Value="FontAwesomeRegular.otf#" />
+            </OnPlatform>
         </ResourceDictionary>
     </Application.Resources>
     

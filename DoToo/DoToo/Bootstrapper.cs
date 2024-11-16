@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using DoToo.Repositories;
 using DoToo.ViewModels;
 using DoToo.Utils;
+using DoToo.Repositories.Database;
 
 namespace DoToo
 {
@@ -29,7 +30,12 @@ namespace DoToo
                 ContainerBuilder.RegisterType(type.AsType());
             }
 
+            ContainerBuilder.RegisterInstance(new SqLiteDoToo()).As<ISqLiteDoToo>();
+
             ContainerBuilder.RegisterType<TodoItemRepository>().SingleInstance();
+            ContainerBuilder.RegisterType<SubTaskRepository>().SingleInstance();
+            //ContainerBuilder.RegisterInstance(new SubTaskRepository()).As<ISubTaskRepository>();
+
             ContainerBuilder.RegisterInstance(new MessageService()).As<IMessageServices>();
         }
 

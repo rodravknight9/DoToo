@@ -14,8 +14,7 @@ namespace DoToo.ViewModels
         {
             foreach (var propertyName in propertyNames)
             {
-                PropertyChanged?.Invoke(this, new
-                PropertyChangedEventArgs(propertyName));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
         public INavigation Navigation { get; set; }
