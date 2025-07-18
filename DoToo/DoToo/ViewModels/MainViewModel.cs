@@ -72,7 +72,8 @@ namespace DoToo.ViewModels
 
             if (vm.Item.Id > 0)
             {
-                var subTasks = (await _subTaskRepository.GetItems(vm.Item.Id))
+                var test = await _subTaskRepository.GetItems(vm.Item.Id);
+                var subTasks = test
                     .Select(t => vm.CreateSubTaskViewModel(t));
                 vm.SubTasks = new ObservableCollection<SubtaskViewModel>(subTasks);
             }

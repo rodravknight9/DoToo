@@ -4,6 +4,7 @@ using DoToo.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -15,10 +16,17 @@ namespace DoToo.ViewModels
         private readonly TodoItemRepository _repository;
         private readonly ISubTaskRepository _taskRepository;
         private readonly IMessageServices _messageServices;
-        public TodoItem Item { get; set; }
+        public TodoItem Item {
+            //get { return Item; }
+            //set
+            //{
+            //    Item = value;
+            //    NewSubTask.Id = value.Id;
+            //}
+            get; set;
+        }
         public bool canBeDeleted { get; set; }
         public ObservableCollection<SubtaskViewModel> SubTasks { get; set; }
-        public List<SubTask> TodoSubtasks {  get; set; } = new List<SubTask>();
         public SubTask NewSubTask { get; set; }
 
         public ItemViewModel(
@@ -50,15 +58,19 @@ namespace DoToo.ViewModels
         public ICommand Save => new Command(async () =>
         {
             await _repository.AddOrUpdate(Item);
+            await _taskRepository.UpdateAndAddMany(SubTasks.Select(s => s.SubTask).ToList());
+
             await _messageServices.ShowAsync("Item has been saved");
-            //await Navigation.PopAsync();
+            await Navigation.PopAsync();
         });
 
         public ICommand Delete => new Command(async () =>
         {
             if(Item.Id <= 0) return;
+
             bool isOk = await _messageServices.AskAsync("Are you sure you want to delete this item?");
             if (!isOk) return;
+
             await _repository.DeleteItem(Item.Id);
             await Navigation.PopAsync();
         });
@@ -77,9 +89,6 @@ namespace DoToo.ViewModels
             }
             
             SubTasks.Add(CreateSubTaskViewModel(NewSubTask));
-            await _taskRepository.Add(NewSubTask);
-
-            NewSubTask.Detail = string.Empty;
         });
 
         public SubtaskViewModel CreateSubTaskViewModel(SubTask subTask)
@@ -87,6 +96,5 @@ namespace DoToo.ViewModels
             var subTaskVm = new SubtaskViewModel(subTask);
             return subTaskVm;
         }
-
     }
 }

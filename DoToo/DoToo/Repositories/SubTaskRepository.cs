@@ -3,7 +3,7 @@ using DoToo.Repositories.Database;
 using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DoToo.Repositories
@@ -44,6 +44,25 @@ namespace DoToo.Repositories
         public Task<bool> DeleteOne(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task AddMany(List<SubTask> subTasks)
+        {
+            await _connection.InsertAllAsync(subTasks);
+        }
+
+        public async Task UpdateMany(List<SubTask> subTasks)
+        { 
+            await _connection.UpdateAllAsync(subTasks);
+        }
+
+        public async Task UpdateAndAddMany(List<SubTask> subTasks)
+        { 
+            List<SubTask> tasksToAdd = subTasks.Where(t => t.Id > 0).ToList();
+            List<SubTask> tasksToUpdate = subTasks.Where(t => t.Id <= 0).ToList();
+
+            await _connection.UpdateAllAsync(tasksToUpdate);
+            await _connection.InsertAllAsync(tasksToAdd);
         }
 
         public async Task<List<SubTask>> GetItems(int todoId)

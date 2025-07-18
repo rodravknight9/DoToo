@@ -12,9 +12,12 @@ namespace DoToo.Repositories
         event EventHandler<SubTask> OnSubTaskDeleted;
 
         Task<List<SubTask>> GetItems(int todoId);
+        Task AddOrUpdate(SubTask subTask);
         Task Add(SubTask subTask);
         Task Update(SubTask subTask);
-        Task AddOrUpdate(SubTask subTask);
+        Task UpdateAndAddMany(List<SubTask> subTasks);
+        Task AddMany(List<SubTask> subTasks);
+        Task UpdateMany(List<SubTask> subTasks);
         Task<bool> DeleteOne(int id);
     }
 }
